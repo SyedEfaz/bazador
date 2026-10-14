@@ -1,23 +1,20 @@
-# বাজার দর / BazarDor
+# BazarDor (বাজার দর)
 
 ## Short description
 
-BazarDor is a Bangla grocery price guide for browsing example prices across everyday products and markets. Prices are sample data, not live market prices.
+BazarDor is a Bengali-first grocery price guide. Product and category data load directly from the Programming Hero BazarDor API in the browser.
 
 ## Technologies used
 
-- Next.js
-- React
-- TypeScript
-- Better Auth
-- MongoDB
-- Tailwind CSS
-- DaisyUI
+- Next.js, React, and TypeScript
+- Tailwind CSS and DaisyUI
+- Programming Hero BazarDor API
+- Better Auth with MongoDB for email/password and Google authentication
 
 ## Five key features
 
-1. Browse grocery products by category.
-2. View example prices and price ranges for different markets.
-3. Compare today’s prices with previous sample prices.
-4. See which product prices are rising or falling.
-5. Sign up and sign in with email and password or Google, and manage your profile.
+1. Browse products and categories from the BazarDor API.
+2. View prices and compare changes over time.
+3. Sort products on category pages.
+4. Compare price ranges across markets.
+5. Sign up, sign in, and manage a profile, with Google sign-in when OAuth credentials are configured.

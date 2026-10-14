@@ -6,6 +6,7 @@ import { authClient } from "@/lib/auth-client";
 
 export default function SocialButtons() {
   const [loading, setLoading] = useState(false);
+  const googleConfigured = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
 
   async function signInWithGoogle() {
     setLoading(true);
@@ -30,8 +31,8 @@ export default function SocialButtons() {
   return (
     <>
       <div className="divider text-xs">অথবা</div>
-      <button type="button" className="btn btn-outline w-full" onClick={signInWithGoogle} disabled={loading}>
-        {loading ? "অপেক্ষা করুন..." : "Google দিয়ে চালিয়ে যান"}
+      <button type="button" className="btn btn-outline w-full" onClick={signInWithGoogle} disabled={loading || !googleConfigured}>
+        {!googleConfigured ? "Google sign-in needs configuration" : loading ? "অপেক্ষা করুন..." : "Google দিয়ে চালিয়ে যান"}
       </button>
     </>
   );
