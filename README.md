@@ -1,19 +1,19 @@
-# বাজার দর
+# Bazar Dor
 
-বাংলাদেশের নিত্যপণ্যের দর, দামের ওঠানামা এবং বাজারভিত্তিক মূল্যতথ্য দেখানোর Next.js অ্যাপ।
+A Next.js app for viewing prices of everyday essentials in Bangladesh, price changes, and market-specific pricing information.
 
-## কী আছে
+## Features
 
-- হোমপেজে দাম বাড়া ও কমা পণ্যের তালিকা, সঙ্গে সব পণ্যের বর্তমান গড় দাম
-- বিভাগভিত্তিক পণ্য দেখা ও দাম অনুযায়ী সাজানো
-- পণ্যের সর্বনিম্ন, সর্বোচ্চ ও গড় দাম এবং বিভাগভিত্তিক বাজারদর
-- ইমেইল/পাসওয়ার্ড এবং Google, GitHub ও Discord দিয়ে লগইন
-- প্রোফাইল দেখা ও নাম পরিবর্তন
-- মূল্যতথ্যের জন্য দুটি API ঠিকানা; প্রথমটি ব্যর্থ হলে বিকল্প ঠিকানায় চেষ্টা করা হয়
+- The homepage highlights products with rising and falling prices and shows the current average price of all products.
+- Browse products by category and sort them by price.
+- View minimum, maximum, and average product prices, along with market prices by division.
+- Sign in with email and password or with Google, GitHub, and Discord.
+- View your profile and update your name.
+- Price data is fetched from two API endpoints; if the first is unavailable, the app tries the fallback endpoint.
 
-## স্থানীয়ভাবে চালানো
+## Run Locally
 
-MongoDB server চালু করুন অথবা MongoDB Atlas cluster তৈরি করুন। `.env.example` থেকে `.env.local` বানিয়ে MongoDB connection string, Better Auth secret এবং প্রয়োজনীয় OAuth তথ্য দিন। PowerShell-এ:
+Start a MongoDB server or create a MongoDB Atlas cluster. Copy `.env.example` to `.env.local` and provide your MongoDB connection string, Better Auth secret, and any OAuth credentials you need. In PowerShell:
 
 ```powershell
 npm install
@@ -21,10 +21,16 @@ Copy-Item .env.example .env.local
 npm run dev
 ```
 
-`MONGODB_URI`-তে database name-সহ connection string দিন, যেমন `mongodb://127.0.0.1:27017/bazardor` অথবা Atlas-এর `mongodb+srv://.../bazardor` URI। `BETTER_AUTH_SECRET`-ও আবশ্যক। OAuth লগইন চালু করতে সংশ্লিষ্ট provider-এর developer console থেকে আসল client ID ও client secret `.env.local`-এ বসান; `.env.example`-এর ফাঁকা মান বা নমুনা মান দিয়ে লগইন হবে না। Provider-এ redirect/callback URL হিসেবে `http://localhost:3000/api/auth/callback/google`, `http://localhost:3000/api/auth/callback/github` এবং `http://localhost:3000/api/auth/callback/discord` যোগ করুন। Production-এ `localhost:3000`-এর বদলে প্রকাশিত সাইটের origin ব্যবহার করুন এবং `BETTER_AUTH_URL` ও `NEXT_PUBLIC_APP_URL`-কে সেই একই origin-এ সেট করুন। ইমেইল/পাসওয়ার্ডে আগে `/signup` থেকে অ্যাকাউন্ট খুলে পরে `/signin` দিয়ে লগইন করুন। Better Auth-এর MongoDB adapter প্রয়োজনীয় collections ও indexes তৈরি করে; আলাদা database migration command নেই।
+Set `MONGODB_URI` to a connection string that includes the database name, such as `mongodb://127.0.0.1:27017/bazardor` or an Atlas URI like `mongodb+srv://.../bazardor`. `BETTER_AUTH_SECRET` is also required. To enable OAuth sign-in, add the real client ID and client secret from each provider's developer console to `.env.local`; blank or sample values from `.env.example` will not work. Add these redirect/callback URLs to the respective providers:
 
-## প্রকাশ
+- Google: `http://localhost:3000/api/auth/callback/google`
+- GitHub: `http://localhost:3000/api/auth/callback/github`
+- Discord: `http://localhost:3000/api/auth/callback/discord`
 
-Vercel-এ প্রকাশের সময় MongoDB Atlas বা অন্য hosted MongoDB database ব্যবহার করুন। `.env.example`-এর প্রয়োজনীয় মানগুলো deployment settings-এ যোগ করুন; `MONGODB_URI`-তে database name-সহ URI দিন এবং `BETTER_AUTH_URL` ও `NEXT_PUBLIC_APP_URL`-এ প্রকাশিত সাইটের URL বসান। পণ্যের বিস্তারিত ও বিভাগের route সরাসরি refresh করেও খোলা যায়।
+In production, replace `localhost:3000` with your deployed site's origin and set `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` to that same origin. To use email and password, create an account at `/signup`, then sign in at `/signin`. Better Auth's MongoDB adapter creates the required collections and indexes; no separate database migration command is needed.
 
-PostgreSQL-এর পুরোনো `DATABASE_URL` এই অ্যাপ আর ব্যবহার করে না। PostgreSQL-এ আগে থেকে থাকা account-গুলো MongoDB-তে স্বয়ংক্রিয়ভাবে কপি হবে না; দরকার হলে আলাদাভাবে user data migrate করতে হবে।
+## Deployment
+
+When deploying to Vercel, use MongoDB Atlas or another hosted MongoDB database. Add the required values from `.env.example` to your deployment environment settings. Include the database name in `MONGODB_URI`, and set `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` to your deployed site's URL. Product detail and category routes can also be opened directly or refreshed.
+
+This app no longer uses the old PostgreSQL `DATABASE_URL`. Existing accounts in PostgreSQL are not automatically copied to MongoDB; migrate user data separately if needed.
