@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CategoryView from "@/components/CategoryView";
-import { GridSkeleton } from "@/components/ProductGrid";
+import { ProductGridPlaceholder } from "@/components/ProductGrid";
 import { getCategories, getProductsByCategory } from "@/lib/market-data";
 import type { Category, Product } from "@/lib/types";
 
@@ -35,7 +35,7 @@ export default function CategoryPage() {
     return () => { active = false; };
   }, [slug]);
 
-  if (loading) return <GridSkeleton />;
+  if (loading) return <ProductGridPlaceholder />;
   if (error) return <p role="alert">Could not load this category. Check your connection and try again.</p>;
   if (!category) {
     return <div className="py-12 text-center"><h1 className="text-2xl font-bold">Category not found</h1><Link className="link link-primary mt-3 inline-block" href="/">Return home</Link></div>;
