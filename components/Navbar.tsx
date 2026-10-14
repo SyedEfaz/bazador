@@ -1,10 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { getCategories } from "@/lib/market-data";
+import type { Category } from "@/lib/types";
 import CategoryLinks from "./CategoryLinks";
 import AuthActions from "./AuthActions";
 
 export default function Navbar() {
-  const categories = getCategories();
+  const [categories, setCategories] = useState<Category[]>([]);
+  useEffect(() => {
+    getCategories().then(setCategories).catch(() => setCategories([]));
+  }, []);
   return (
     <header className="sticky top-0 z-40 border-b border-base-300 bg-base-100/95 backdrop-blur">
       <div className="market-shell flex items-center justify-between gap-3 py-2.5">

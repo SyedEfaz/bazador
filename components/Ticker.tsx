@@ -1,8 +1,16 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getProducts } from "@/lib/market-data";
+import type { Product } from "@/lib/types";
 import { formatPct, formatPrice, unitShort } from "@/lib/bn";
 
 export default function Ticker() {
-  const items = getProducts().slice(0, 14);
+  const [products, setProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    getProducts().then(setProducts).catch(() => setProducts([]));
+  }, []);
+  const items = products.slice(0, 14);
   if (!items.length) return null;
   const row = items.map((p) => {
     const d = p.change;

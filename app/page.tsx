@@ -1,6 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { getProducts } from "@/lib/market-data";
-import ProductGrid from "@/components/ProductGrid";
+import type { Product } from "@/lib/types";
+import ProductGrid, { GridSkeleton } from "@/components/ProductGrid";
 
 const Section = ({ title, sub, id, children }: { title: string; sub?: string; id?: string; children: React.ReactNode }) => (
   <section id={id} className="mt-7 sm:mt-9">
@@ -13,7 +17,17 @@ const Section = ({ title, sub, id, children }: { title: string; sub?: string; id
 );
 
 export default function Home() {
-  const all = getProducts();
+  const [all, setAll] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    getProducts()
+      .then(setAll)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
   const up = all.filter((product) => product.change.dir === "up").sort((a, b) => b.change.pct - a.change.pct).slice(0, 6);
   const down = all.filter((product) => product.change.dir === "down").sort((a, b) => b.change.pct - a.change.pct).slice(0, 6);
   return (
@@ -27,10 +41,10 @@ export default function Home() {
         </div>
         <Image src="/hero.png" alt="তাজা শাকসবজির ঝুড়ি" width={320} height={250} priority className="mx-auto h-auto w-full max-w-[10rem] drop-shadow-sm sm:max-w-[13rem]" />
       </section>
-      <Section title="দাম বেড়েছে" sub="গতকালের তুলনায়"><ProductGrid items={up} /></Section>
-      <Section title="দাম কমেছে" sub="গতকালের তুলনায়"><ProductGrid items={down} /></Section>
+      <Section title="দাম বেড়েছে" sub="গতকালের তুলনায়">{loading ? <GridSkeleton n={6} /> : <ProductGrid items={up} />}</Section>
+      <Section title="দাম কমেছে" sub="গতকালের তুলনায়">{loading ? <GridSkeleton n={6} /> : <ProductGrid items={down} />}</Section>
       <Section id="সব-পণ্য" title="আজকের পণ্যের দর" sub="নিত্যপ্রয়োজনীয় পণ্যের গড় দাম">
-        {all.length ? <ProductGrid items={all} /> : <p className="opacity-70">এই মুহূর্তে দাম লোড করা যাচ্ছে না। কিছুক্ষণ পর আবার চেষ্টা করুন।</p>}
+        {loading ? <GridSkeleton /> : error ? <p role="alert">Could not load products. Check your connection and try again.</p> : all.length ? <ProductGrid items={all} /> : <p className="opacity-70">এই মুহূর্তে কোনো পণ্য পাওয়া যায়নি।</p>}
       </Section>
     </>
   );
