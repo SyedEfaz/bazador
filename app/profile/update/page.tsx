@@ -5,9 +5,13 @@ import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
 export default function UpdateProfile() {
+
+
   const { data } = authClient.useSession();
   const router = useRouter();
   const [name, setName] = useState("");
+
+  
   const [loading, setLoading] = useState(false);
   useEffect(() => { if (data?.user) setName(data.user.name); }, [data?.user]);
   async function onSubmit(e: React.FormEvent) {

@@ -12,6 +12,8 @@ export default function SignUp() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); setLoading(true);
     const f = new FormData(e.currentTarget);
+
+    
     try {
       const { error } = await authClient.signUp.email({ name: String(f.get("name")), email: String(f.get("email")), password: String(f.get("password")) });
       if (error) return toast.error(error.message || "নিবন্ধন ব্যর্থ হয়েছে");
