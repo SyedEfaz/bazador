@@ -1,42 +1,61 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+
+import { useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 import SocialButtons from "@/components/SocialButtons";
 
-function Form() {
-  const router = useRouter(), sp = useSearchParams();
+export default function SignIn() {
   const [loading, setLoading] = useState(false);
-  useEffect(() => { if (sp.get("redirected")) toast.error("অনুগ্রহ করে লগইন করুন", { id: "auth-redirect" }); }, [sp]);
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault(); setLoading(true);
-    const f = new FormData(e.currentTarget);
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+    const form = new FormData(event.currentTarget);
+
     try {
-      const { error } = await authClient.signIn.email({ email: String(f.get("email")), password: String(f.get("password")) });
-      if (error) return toast.error(error.message || "লগইন ব্যর্থ হয়েছে");
-      toast.success("সফলভাবে লগইন হয়েছে");
-      router.push(sp.get("next") || "/"); router.refresh();
+      const { error } = await authClient.signIn.email({
+        email: String(form.get("email")),
+        password: String(form.get("password")),
+      });
+
+      if (error) {
+        toast.error(error.message || "Sign-in failed");
+        return;
+      }
+
+      toast.success("Signed in successfully.");
+      const callbackURL = new URL(window.location.href).searchParams.get("callbackURL");
+      const destination = callbackURL?.startsWith("/") && !callbackURL.startsWith("//") ? callbackURL : "/";
+      window.location.assign(destination);
     } catch {
-      toast.error("লগইন সার্ভারে সংযোগ করা যায়নি");
+      toast.error("Could not connect to the sign-in server.");
     } finally {
       setLoading(false);
     }
   }
+
   return (
-    <div className="max-w-md mx-auto card border border-base-300 bg-base-100 shadow-sm"><div className="card-body p-6 sm:p-8">
-      <p className="market-kicker text-sm font-semibold text-secondary">বাজার দর</p>
-      <h1 className="text-2xl font-bold">লগইন করুন</h1>
-      <form onSubmit={onSubmit} className="grid gap-3">
-        <input name="email" type="email" required placeholder="ইমেইল" className="input input-bordered" />
-        <input name="password" type="password" required placeholder="পাসওয়ার্ড" className="input input-bordered" />
-        <button className="btn btn-primary" disabled={loading}>{loading ? "অপেক্ষা করুন..." : "লগইন"}</button>
-      </form>
-      <div className="divider text-xs">অথবা</div>
-      <SocialButtons />
-      <p className="text-sm mt-2">অ্যাকাউন্ট নেই? <Link href="/signup" className="link link-primary">নিবন্ধন করুন</Link></p>
-    </div></div>
+    <section className="card mx-auto w-full max-w-sm rounded-2xl border border-base-300 bg-base-100 shadow-sm">
+      <div className="card-body p-6 sm:p-8">
+        <p className="market-kicker text-sm font-semibold text-secondary">বাজার দর</p>
+        <h1 className="text-2xl font-bold">লগইন করুন</h1>
+        <form onSubmit={onSubmit} className="form-control gap-3">
+          <input name="email" type="email" required placeholder="ইমেইল" className="input input-bordered w-full" />
+          <input name="password" type="password" required placeholder="পাসওয়ার্ড" className="input input-bordered w-full" />
+          <button className="btn btn-primary w-full" disabled={loading}>
+            {loading ? "অপেক্ষা করুন..." : "লগইন করুন"}
+          </button>
+        </form>
+        <SocialButtons />
+        <p className="text-sm">
+          অ্যাকাউন্ট নেই? <Link href="/signup" onClick={(event) => {
+            const search = window.location.search;
+            if (search) { event.preventDefault(); window.location.assign(`/signup${search}`); }
+          }} className="link link-primary">নিবন্ধন করুন</Link>
+        </p>
+      </div>
+    </section>
   );
 }
-export default function SignIn() { return <Suspense><Form /></Suspense>; }

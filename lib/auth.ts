@@ -1,31 +1,46 @@
 import { betterAuth } from "better-auth";
-import { mongodbAdapter } from "better-auth/adapters/mongodb";
+import { mongodbAdapter } from "@better-auth/mongo-adapter";
 import { MongoClient } from "mongodb";
 
-const social = (id?: string, secret?: string) => (id && secret ? { clientId: id, clientSecret: secret } : undefined);
-const e = process.env;
-if (!e.MONGODB_URI) throw new Error("MONGODB_URI is required to connect Better Auth to MongoDB.");
-if (!e.BETTER_AUTH_SECRET || e.BETTER_AUTH_SECRET.length < 32) {
-  throw new Error("BETTER_AUTH_SECRET is required and must be at least 32 characters long.");
-}
-if (!e.BETTER_AUTH_URL) throw new Error("BETTER_AUTH_URL is required to configure Better Auth.");
-const globalForMongo = globalThis as typeof globalThis & { mongoClient?: MongoClient };
-const mongoClient = globalForMongo.mongoClient ?? new MongoClient(e.MONGODB_URI);
-globalForMongo.mongoClient = mongoClient;
-const mongoDb = mongoClient.db();
-const socialProviders = Object.fromEntries(
-  Object.entries({
-    google: social(e.GOOGLE_CLIENT_ID, e.GOOGLE_CLIENT_SECRET),
-    github: social(e.GITHUB_CLIENT_ID, e.GITHUB_CLIENT_SECRET),
-    discord: social(e.DISCORD_CLIENT_ID, e.DISCORD_CLIENT_SECRET),
-  }).filter(([, v]) => v)
-);
+const globalForAuth = globalThis as typeof globalThis & {
+  authInstance?: ReturnType<typeof createAuthInstance>;
+  mongoClient?: MongoClient;
+};
 
-export const auth = betterAuth({
-  database: mongodbAdapter(mongoDb, { client: mongoClient, transaction: false }),
-  secret: e.BETTER_AUTH_SECRET,
-  baseURL: e.BETTER_AUTH_URL,
-  // No email verification / password reset by design
-  emailAndPassword: { enabled: true, autoSignIn: false, minPasswordLength: 6 },
-  socialProviders,
-});
+function createAuthInstance(client: MongoClient, secret: string) {
+  return betterAuth({
+    database: mongodbAdapter(client.db(), { client, transaction: false }),
+    secret,
+    baseURL: process.env.BETTER_AUTH_URL,
+    emailAndPassword: { enabled: true, autoSignIn: false, minPasswordLength: 6 },
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          socialProviders: {
+            google: {
+              clientId: process.env.GOOGLE_CLIENT_ID,
+              clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            },
+          },
+        }
+      : {}),
+  });
+}
+
+export function getAuth() {
+  if (globalForAuth.authInstance) return globalForAuth.authInstance;
+
+  const uri = process.env.MONGODB_URI;
+  const secret = process.env.BETTER_AUTH_SECRET;
+
+  if (!uri) throw new Error("MONGODB_URI is required for authentication.");
+  if (!secret || secret.length < 32) {
+    throw new Error("BETTER_AUTH_SECRET must be at least 32 characters long.");
+  }
+
+  const client = globalForAuth.mongoClient ?? new MongoClient(uri);
+  globalForAuth.mongoClient = client;
+
+  globalForAuth.authInstance = createAuthInstance(client, secret);
+
+  return globalForAuth.authInstance;
+}

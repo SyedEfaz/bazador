@@ -1,32 +1,38 @@
 "use client";
+
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
-const PROVIDERS = [["google", "Google"], ["github", "GitHub"], ["discord", "Discord"]] as const;
 export default function SocialButtons() {
-  const [loadingProvider, setLoadingProvider] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function signIn(provider: (typeof PROVIDERS)[number][0]) {
-    setLoadingProvider(provider);
+  async function signInWithGoogle() {
+    setLoading(true);
+
     try {
-      const { error } = await authClient.signIn.social({ provider, callbackURL: "/" });
-      if (error) toast.error(error.message || "সোশ্যাল লগইন ব্যর্থ হয়েছে");
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: (() => {
+          const value = new URL(window.location.href).searchParams.get("callbackURL");
+          return value?.startsWith("/") && !value.startsWith("//") ? value : "/";
+        })(),
+      });
+
+      if (error) toast.error(error.message || "Could not sign in with Google.");
     } catch {
-      toast.error("সোশ্যাল লগইন সার্ভারে সংযোগ করা যায়নি");
+      toast.error("Could not sign in with Google.");
     } finally {
-      setLoadingProvider(null);
+      setLoading(false);
     }
   }
 
   return (
-    <div className="grid gap-2">
-      {PROVIDERS.map(([id, label]) => (
-        <button key={id} type="button" className="btn btn-outline btn-sm sm:btn-md"
-          disabled={loadingProvider !== null} onClick={() => signIn(id)}>
-          {loadingProvider === id ? "অপেক্ষা করুন..." : `${label} দিয়ে চালিয়ে যান`}
-        </button>
-      ))}
-    </div>
+    <>
+      <div className="divider text-xs">অথবা</div>
+      <button type="button" className="btn btn-outline w-full" onClick={signInWithGoogle} disabled={loading}>
+        {loading ? "অপেক্ষা করুন..." : "Google দিয়ে চালিয়ে যান"}
+      </button>
+    </>
   );
 }

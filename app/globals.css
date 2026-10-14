@@ -1,26 +1,161 @@
-@tailwind base; @tailwind components; @tailwind utilities;
-html { scroll-behavior: smooth; scroll-padding-top: 7rem; }
-body { background: #f0f5f1; }
-::selection { background: #dcebdc; color: #1c3024; }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.marquee-track { display: flex; width: max-content; animation: marquee 45s linear infinite; }
-.marquee:hover .marquee-track { animation-play-state: paused; }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --market-ink: #26352c;
+  --market-green: #138447;
+  --market-line: #dce7de;
+  --market-soft: #f0f5f1;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+  background: var(--market-soft);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--market-soft);
+  color: var(--market-ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #dcebdc;
+  color: #1c3024;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(19, 132, 71, .55);
+  outline-offset: 3px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 45s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 .market-hero {
   background:
     radial-gradient(ellipse at 88% 12%, rgba(19, 132, 71, .08), transparent 33%),
     linear-gradient(125deg, #f1f7f2 0%, #fbfdfb 62%, #eef5ef 100%);
 }
 
+.market-loading-hero {
+  border-color: var(--market-line);
+  background:
+    radial-gradient(ellipse at 88% 12%, rgba(19, 132, 71, .09), transparent 34%),
+    linear-gradient(125deg, #f1f7f2 0%, #fbfdfb 62%, #eef5ef 100%);
+}
 
+.market-loading-basket {
+  background: radial-gradient(circle, rgba(19, 132, 71, .12), rgba(19, 132, 71, .025) 70%);
+  animation: market-basket-bob 2.4s ease-in-out infinite;
+}
 
-.market-kicker { letter-spacing: .04em; }
+.market-loading-card {
+  border-color: var(--market-line);
+  background: rgba(255, 255, 255, .8);
+}
 
+.market-shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e6eee7;
+}
 
-.market-rule { border-color: #dce7de; }
-.price-card { box-shadow: 0 2px 8px rgba(32, 57, 39, .035); }
-.price-card:hover { box-shadow: 0 9px 24px rgba(32, 57, 39, .09); transform: translateY(-2px); }
-.section-heading { border-bottom: 1px solid #dce7de; padding-bottom: .65rem; }
-.market-shell { width: min(100% - 2rem, 68rem); margin-inline: auto; }
-.market-nav-scroll { scrollbar-width: none; }
-.market-nav-scroll::-webkit-scrollbar { display: none; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .marquee-track { animation: none; } }
+.market-shimmer::after {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .8), transparent);
+  animation: market-shimmer 1.6s ease-in-out infinite;
+  content: "";
+}
+
+@keyframes market-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@keyframes market-basket-bob {
+  50% { transform: translateY(-7px); }
+}
+
+.market-kicker {
+  letter-spacing: .04em;
+}
+
+.market-rule,
+.section-heading {
+  border-color: var(--market-line);
+}
+
+.section-heading {
+  border-bottom: 1px solid var(--market-line);
+  padding-bottom: .65rem;
+}
+
+.price-card {
+  box-shadow: 0 2px 8px rgba(32, 57, 39, .035);
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.market-shell {
+  width: min(100% - 2rem, 68rem);
+  margin-inline: auto;
+}
+
+.market-nav-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.market-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .price-card:hover {
+    box-shadow: 0 9px 24px rgba(32, 57, 39, .09);
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 640px) {
+  html {
+    scroll-padding-top: 5.5rem;
+  }
+
+  .market-shell {
+    width: min(100% - 1.25rem, 68rem);
+  }
+
+  .market-hero {
+    border-radius: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

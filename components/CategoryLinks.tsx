@@ -13,7 +13,7 @@ export default function CategoryLinks({ cats }: { cats: Category[] }) {
           <li key={c.slug}>
             <Link href={`/category/${c.slug}`} aria-current={active ? "page" : undefined}
               className={`btn btn-xs min-h-8 rounded-full px-2.5 text-xs sm:btn-sm ${active ? "btn-primary" : "btn-ghost hover:bg-base-200"}`}>
-              {c.icon} {c.nameBn}
+              {c.nameBn}
             </Link>
           </li>
         );
