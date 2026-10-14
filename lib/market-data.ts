@@ -47,9 +47,9 @@ export async function getProductsByCategory(category: string): Promise<Product[]
   return products.map(withChange);
 }
 
-export async function getProduct(slug: string): Promise<(Product & { markets: Market[] }) | null> {
+export async function getProduct(auth: string): Promise<(Product & { markets: Market[] }) | null> {
   const products = await getData<Array<ProductInput & { markets?: Market[] }>>("/products");
-  const match = products.find((item) => item.slug === slug);
+  const match = products.find((item) => item.auth === auth);
   if (!match) return null;
 
   const product = await getData<ProductInput & { markets?: Market[] }>(`/products/${match.id}`);

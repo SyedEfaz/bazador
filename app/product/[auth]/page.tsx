@@ -11,7 +11,7 @@ type ProductWithMarkets = Product & { markets: Market[] };
 
 export default function ProductPage() {
   const params = useParams<{ auth: string }>();
-  const slug = params.auth;
+  const auth = params.auth;
   const [product, setProduct] = useState<ProductWithMarkets | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -20,12 +20,12 @@ export default function ProductPage() {
     let active = true;
     setLoading(true);
     setError(false);
-    getProduct(slug)
+    getProduct(auth)
       .then((item) => { if (active) setProduct(item); })
       .catch(() => { if (active) setError(true); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [slug]);
+  }, [auth]);
 
   if (loading) return <div className="mx-auto max-w-5xl animate-pulse rounded-2xl border border-base-300 p-8 text-center">Loading product…</div>;
   if (error) return <p role="alert">Could not load this product. Check your connection and try again.</p>;

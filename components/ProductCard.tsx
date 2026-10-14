@@ -6,7 +6,7 @@ import ProductIcon from "./ProductIcon";
 
 export default function ProductCard({ p }: { p: Product }) {
   return (
-    <Link href={`/product/${p.slug}`} className="price-card card border border-base-300 bg-base-100 transition-all duration-200 hover:border-primary">
+    <Link href={`/product/${p.auth}`} className="price-card card border border-base-300 bg-base-100 transition-all duration-200 hover:border-primary">
       <div className="card-body gap-2.5 p-3 sm:p-3.5">
         <div className="flex items-center gap-2.5">
           <ProductIcon product={p} className="h-10 w-10" />

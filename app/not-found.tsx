@@ -11,7 +11,7 @@ export default function NotFound() {
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/" className="btn btn-primary">হোম পেজে ফিরুন</Link>
-          <Link href="/#সব-পণ্য" className="btn btn-outline">সব পণ্য দেখুন</Link>
+          <Link href="/" className="btn btn-outline">সব পণ্য দেখুন</Link>
         </div>
       </div>
     </section>

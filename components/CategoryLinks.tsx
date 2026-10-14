@@ -8,10 +8,10 @@ export default function CategoryLinks({ cats }: { cats: Category[] }) {
   return (
     <ul className="flex gap-1.5 whitespace-nowrap">
       {cats.map((c) => {
-        const active = path === `/category/${c.slug}`;
+        const active = path === `/category/${c.auth}`;
         return (
-          <li key={c.slug}>
-            <Link href={`/category/${c.slug}`} aria-current={active ? "page" : undefined}
+          <li key={c.auth}>
+            <Link href={`/category/${c.auth}`} aria-current={active ? "page" : undefined}
               className={`btn btn-xs min-h-8 rounded-full px-2.5 text-xs sm:btn-sm ${active ? "btn-primary" : "btn-ghost hover:bg-base-200"}`}>
               {c.nameBn}
             </Link>

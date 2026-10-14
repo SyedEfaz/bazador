@@ -10,7 +10,7 @@ import type { Category, Product } from "@/lib/types";
 
 export default function CategoryPage() {
   const params = useParams<{ auth: string }>();
-  const slug = params.auth;
+  const auth = params.auth;
   const [category, setCategory] = useState<Category | null>(null);
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,10 +20,10 @@ export default function CategoryPage() {
     let active = true;
     setLoading(true);
     setError(false);
-    Promise.all([getCategories(), getProductsByCategory(slug)])
+    Promise.all([getCategories(), getProductsByCategory(auth)])
       .then(([categories, products]) => {
         if (!active) return;
-        setCategory(categories.find((item) => item.slug === slug) ?? null);
+        setCategory(categories.find((item) => item.auth === auth) ?? null);
         setItems(products);
       })
       .catch(() => {
@@ -33,7 +33,7 @@ export default function CategoryPage() {
         if (active) setLoading(false);
       });
     return () => { active = false; };
-  }, [slug]);
+  }, [auth]);
 
   if (loading) return <ProductGridPlaceholder />;
   if (error) return <p role="alert">Could not load this category. Check your connection and try again.</p>;
