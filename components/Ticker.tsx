@@ -6,16 +6,16 @@ export default async function Ticker() {
   if (!items.length) return null;
   const row = items.map((p) => {
     const d = p.change!;
-    const color = d.dir === "up" ? "text-success" : d.dir === "down" ? "text-error" : "opacity-60";
+    const color = d.dir === "up" ? "text-error" : d.dir === "down" ? "text-success" : "opacity-60";
     return (
-      <span key={p.id} className="mx-6 whitespace-nowrap text-sm">
+      <span key={p.id} className="mx-4 whitespace-nowrap text-xs sm:mx-6 sm:text-sm">
         {p.image} {p.nameBn} দাম {formatPrice(p.today)} টাকা/{unitShort(p.unit)}{" "}
         <b className={color}>{d.dir === "up" ? "▲" : d.dir === "down" ? "▼" : "–"} {formatPct(d.pct)}%</b>
       </span>
     );
   });
   return (
-    <div className="marquee bg-base-200 border-b border-base-300 overflow-hidden py-2" role="region" aria-label="দামের হালনাগাদ">
+    <div className="marquee overflow-hidden border-b border-base-300 bg-base-200 py-1.5" role="region" aria-label="দামের হালনাগাদ">
       <div className="marquee-track">{row}<div className="flex" aria-hidden="true">{row}</div></div>
     </div>
   );

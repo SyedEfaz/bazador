@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="bn" data-theme="bazar" className={font.variable}>
+    <html lang="bn" data-theme="bazar" data-scroll-behavior="smooth" className={font.variable}>
       <body className="font-sans min-h-screen flex flex-col bg-base-100 text-neutral">
         <Navbar />
         <Ticker />
-        <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8">{children}</main>
+        <main className="market-shell flex-1 py-5 sm:py-7">{children}</main>
         <Footer />
         <Toaster position="top-center" />
       </body>

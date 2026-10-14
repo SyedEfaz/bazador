@@ -7,10 +7,10 @@ const config: Config = {
   daisyui: {
     themes: [{
       bazar: {
-        primary: "#1f8a4c", "primary-content": "#ffffff",
-        secondary: "#e8731a", accent: "#f5a30a",
-        neutral: "#2b2118", "base-100": "#fffdf8", "base-200": "#f6f1e7", "base-300": "#e9e0cf",
-        info: "#2f7fb8", success: "#1f8a4c", warning: "#f5a30a", error: "#d6362f",
+        primary: "#138447", "primary-content": "#ffffff",
+        secondary: "#496655", accent: "#e8731a",
+        neutral: "#26352c", "base-100": "#fbfdfb", "base-200": "#eff5f0", "base-300": "#dce7de",
+        info: "#2f7fb8", success: "#16834a", warning: "#f5a30a", error: "#d9342b",
       },
     }],
   },

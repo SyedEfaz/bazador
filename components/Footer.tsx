@@ -1,9 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="bg-neutral text-base-100 mt-16">
-      <div className="max-w-6xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-3 text-sm">
+    <footer className="mt-12 border-t border-base-300 bg-base-100">
+      <div className="market-shell flex flex-col justify-between gap-2 py-5 text-xs opacity-75 md:flex-row sm:text-sm">
         <p><span className="font-semibold">বাজার দর</span> <span className="opacity-75">· প্রতিদিনের বাজারের হিসাব</span></p>
-        <p className="opacity-80">বাজার ও সময়ভেদে প্রকৃত দাম পরিবর্তিত হতে পারে।</p>
+        <p>বাজার ও সময়ভেদে প্রকৃত দাম পরিবর্তিত হতে পারে।</p>
       </div>
     </footer>
   );

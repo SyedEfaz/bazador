@@ -5,17 +5,17 @@ import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
 
 export default function UpdateProfile() {
-
-
   const { data } = authClient.useSession();
   const router = useRouter();
   const [name, setName] = useState("");
-
-  
   const [loading, setLoading] = useState(false);
-  useEffect(() => { if (data?.user) setName(data.user.name); }, [data?.user]);
+  useEffect(() => {
+    if (data?.user) setName(data.user.name);
+  }, [data?.user]);
+
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    setLoading(true);
     const { error } = await authClient.updateUser({ name });
     setLoading(false);
     if (error) return toast.error(error.message || "আপডেট ব্যর্থ হয়েছে");

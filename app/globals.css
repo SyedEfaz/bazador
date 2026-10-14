@@ -1,18 +1,21 @@
 @tailwind base; @tailwind components; @tailwind utilities;
-html { scroll-behavior: smooth; scroll-padding-top: 9rem; }
-body { background: #fffdf8; }
+html { scroll-behavior: smooth; scroll-padding-top: 7rem; }
+body { background: #f0f5f1; }
 ::selection { background: #dcebdc; color: #1c3024; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-track { display: flex; width: max-content; animation: marquee 45s linear infinite; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 .market-hero {
   background:
-    radial-gradient(ellipse at 88% 12%, rgba(232, 115, 26, .12), transparent 33%),
-    linear-gradient(125deg, #f5f1e7 0%, #fffdf8 62%, #f1eadb 100%);
+    radial-gradient(ellipse at 88% 12%, rgba(19, 132, 71, .08), transparent 33%),
+    linear-gradient(125deg, #f1f7f2 0%, #fbfdfb 62%, #eef5ef 100%);
 }
 .market-kicker { letter-spacing: .04em; }
-.market-rule { border-color: #ded6c5; }
-.price-card { box-shadow: 0 2px 8px rgba(43, 33, 24, .035); }
-.price-card:hover { box-shadow: 0 9px 24px rgba(43, 33, 24, .09); transform: translateY(-2px); }
-.section-heading { border-bottom: 1px solid #ded6c5; padding-bottom: .75rem; }
+.market-rule { border-color: #dce7de; }
+.price-card { box-shadow: 0 2px 8px rgba(32, 57, 39, .035); }
+.price-card:hover { box-shadow: 0 9px 24px rgba(32, 57, 39, .09); transform: translateY(-2px); }
+.section-heading { border-bottom: 1px solid #dce7de; padding-bottom: .65rem; }
+.market-shell { width: min(100% - 2rem, 68rem); margin-inline: auto; }
+.market-nav-scroll { scrollbar-width: none; }
+.market-nav-scroll::-webkit-scrollbar { display: none; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .marquee-track { animation: none; } }
