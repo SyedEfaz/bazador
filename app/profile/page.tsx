@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { runWithToast } from "@/lib/run-with-toast";
 import UserAvatar from "@/components/UserAvatar";
 
 export default function Profile() {
@@ -19,25 +19,25 @@ export default function Profile() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
 
-    try {
-      const { error } = await authClient.updateUser({ name });
-      if (error) {
-        toast.error(error.message || "Could not update your profile.");
-        return;
-      }
-
-      toast.success("Profile updated successfully.");
-      router.refresh();
-    } catch {
-      toast.error("Could not update your profile.");
-    } finally {
-      setLoading(false);
-    }
+    const succeeded = await runWithToast(
+      setLoading,
+      () => authClient.updateUser({ name }),
+      {
+        error: "Could not update your profile.",
+        connectionError: "Could not update your profile.",
+        success: "Profile updated successfully.",
+      },
+    );
+    if (succeeded) router.refresh();
   }
 
-  if (isPending) return <div className="skeleton mx-auto h-80 w-full max-w-md rounded-2xl" />;
+  if (isPending) return (
+    <div role="status" className="mx-auto w-full max-w-md">
+      <span className="sr-only">প্রোফাইল লোড হচ্ছে...</span>
+      <div aria-hidden="true" className="skeleton h-80 rounded-2xl" />
+    </div>
+  );
   if (!user) return null;
 
   return (

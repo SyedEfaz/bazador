@@ -10,7 +10,12 @@ export default function AuthActions() {
   const { data, isPending } = authClient.useSession();
   const router = useRouter();
 
-  if (isPending) return <div className="skeleton h-9 w-24 rounded-full" />;
+  if (isPending) return (
+    <div role="status">
+      <span className="sr-only">অ্যাকাউন্ট লোড হচ্ছে...</span>
+      <div aria-hidden="true" className="skeleton h-9 w-24 rounded-full" />
+    </div>
+  );
 
   const user = data?.user;
   if (!user) {

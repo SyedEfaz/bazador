@@ -2,18 +2,10 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <section className="market-hero relative mx-auto grid min-h-[26rem] max-w-4xl place-items-center overflow-hidden rounded-3xl border market-rule px-6 py-14 text-center sm:px-12">
-      <div className="relative max-w-xl">
-        <p className="market-kicker text-sm font-semibold text-secondary">৪০৪ · গলিটা বোধহয় ভুল হয়েছে</p>
-        <h1 className="my-3 text-4xl font-bold sm:text-5xl">এই পাতার কোনো দর পাওয়া গেল না</h1>
-        <p className="mx-auto mb-7 max-w-md leading-relaxed opacity-70">
-          ঠিকানাটি ভুল হতে পারে, অথবা এই পাতাটি আর বাজারে নেই। চলুন, বাজারের মূল ফটকে ফিরে যাই।
-        </p>
-        <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/" className="btn btn-primary">হোম পেজে ফিরুন</Link>
-          <Link href="/" className="btn btn-outline">সব পণ্য দেখুন</Link>
-        </div>
-      </div>
+    <section className="py-12 text-center">
+      <h1 className="text-2xl font-bold">পাতাটি পাওয়া যায়নি</h1>
+      <p className="my-4">এই ঠিকানায় কোনো পৃষ্ঠা নেই।</p>
+      <Link href="/" className="btn btn-primary">হোমে ফিরুন</Link>
     </section>
   );
 }

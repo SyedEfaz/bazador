@@ -3,6 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { getSafeCallbackUrl } from "@/lib/callback-url";
 
 export default function SocialButtons() {
   const [loading, setLoading] = useState(false);
@@ -14,10 +15,7 @@ export default function SocialButtons() {
     try {
       const { error } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: (() => {
-          const value = new URL(window.location.href).searchParams.get("callbackURL");
-          return value?.startsWith("/") && !value.startsWith("//") ? value : "/";
-        })(),
+        callbackURL: getSafeCallbackUrl(new URL(window.location.href).searchParams.get("callbackURL")) ?? "/",
       });
 
       if (error) toast.error(error.message || "Could not sign in with Google.");

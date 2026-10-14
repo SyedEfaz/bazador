@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { getSafeCallbackUrl } from "@/lib/callback-url";
+import { runWithToast } from "@/lib/run-with-toast";
 import SocialButtons from "@/components/SocialButtons";
 
 export default function SignUp() {
@@ -11,30 +12,25 @@ export default function SignUp() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
     const form = new FormData(event.currentTarget);
 
-    try {
-      const { error } = await authClient.signUp.email({
+    const succeeded = await runWithToast(
+      setLoading,
+      () => authClient.signUp.email({
         name: String(form.get("name")),
         email: String(form.get("email")),
         password: String(form.get("password")),
-      });
+      }),
+      {
+        error: "Sign-up failed",
+        connectionError: "Could not connect to the sign-up server.",
+        success: "Sign-up successful. You can now sign in.",
+      },
+    );
+    if (!succeeded) return;
 
-      if (error) {
-        toast.error(error.message || "Sign-up failed");
-        return;
-      }
-
-      toast.success("Sign-up successful. You can now sign in.");
-      const callbackURL = new URL(window.location.href).searchParams.get("callbackURL");
-      const destination = callbackURL?.startsWith("/") && !callbackURL.startsWith("//") ? callbackURL : null;
-      window.location.assign(destination ? `/signin?callbackURL=${encodeURIComponent(destination)}` : "/signin");
-    } catch {
-      toast.error("Could not connect to the sign-up server.");
-    } finally {
-      setLoading(false);
-    }
+    const destination = getSafeCallbackUrl(new URL(window.location.href).searchParams.get("callbackURL"));
+    window.location.assign(destination ? `/signin?callbackURL=${encodeURIComponent(destination)}` : "/signin");
   }
 
   return (

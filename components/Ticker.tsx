@@ -23,8 +23,8 @@ export default function Ticker() {
     );
   });
   return (
-    <div className="marquee overflow-hidden border-b border-base-300 bg-base-200 py-1.5" role="region" aria-label="নমুনা দামের তালিকা">
-      <div className="marquee-track">{row}<div className="flex" aria-hidden="true">{row}</div></div>
+    <div className="market-marquee overflow-hidden border-b border-base-300 bg-base-200 py-1.5" role="region" aria-label="নমুনা দামের তালিকা">
+      <div className="market-marquee-track">{row}<div className="flex" aria-hidden="true">{row}</div></div>
     </div>
   );
 }

@@ -5,11 +5,12 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Ticker from "@/components/Ticker";
 import Footer from "@/components/Footer";
+import { MARKET_DATA_DISCLAIMER } from "@/lib/constants";
 
 const font = Hind_Siliguri({ subsets: ["bengali", "latin"], weight: ["400", "500", "600", "700"], variable: "--font-bn" });
 export const metadata: Metadata = {
   title: { default: "বাজার দর | বাংলাদেশের নিত্যপণ্যের দাম", template: "%s | বাজার দর" },
-  description: "বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্যের নমুনা দাম, বাজারভিত্তিক তুলনা এবং দামের ওঠানামা দেখুন। এটি লাইভ বাজার তথ্য নয়।",
+  description: `বাংলাদেশের নিত্যপ্রয়োজনীয় পণ্যের নমুনা দাম, বাজারভিত্তিক তুলনা এবং দামের ওঠানামা দেখুন। ${MARKET_DATA_DISCLAIMER}।`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

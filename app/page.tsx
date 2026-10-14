@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { MARKET_DATA_DISCLAIMER } from "@/lib/constants";
 import { getProducts } from "@/lib/market-data";
-import type { Product } from "@/lib/types";
+import { useAsyncData } from "@/lib/use-async-data";
 import ProductGrid, { ProductGridPlaceholder } from "@/components/ProductGrid";
 
 const Section = ({ title, sub, id, children }: { title: string; sub?: string; id?: string; children: React.ReactNode }) => (
@@ -17,16 +17,7 @@ const Section = ({ title, sub, id, children }: { title: string; sub?: string; id
 );
 
 export default function Home() {
-  const [all, setAll] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    getProducts()
-      .then(setAll)
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, []);
+  const { data: all = [], loading, error } = useAsyncData(getProducts);
 
   const up = all.filter((product) => product.change.dir === "up").sort((a, b) => b.change.pct - a.change.pct).slice(0, 6);
   const down = all.filter((product) => product.change.dir === "down").sort((a, b) => b.change.pct - a.change.pct).slice(0, 6);
@@ -34,7 +25,7 @@ export default function Home() {
     <>
       <section className="market-hero grid items-center gap-3 overflow-hidden rounded-2xl border market-rule px-5 py-5 sm:grid-cols-[1.25fr_.75fr] sm:gap-6 sm:px-7 sm:py-6">
         <div className="max-w-xl">
-          <p className="market-kicker inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">নমুনা মূল্য · লাইভ ডেটা নয়</p>
+          <p className="market-kicker inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary">নমুনা মূল্য · {MARKET_DATA_DISCLAIMER}</p>
           <h1 className="my-2.5 text-2xl font-bold leading-tight sm:text-3xl">আজকের বাজারের দাম এক নজরে</h1>
           <p className="mb-4 max-w-lg text-xs leading-relaxed opacity-75 sm:text-sm">চাল, ডাল, তেল, সবজি, মাছ, মাংস ও ডিমের নমুনা দাম এবং বাজার তুলনার ডেমো এক জায়গায়।</p>
           <a href="#সব-পণ্য" className="btn btn-primary btn-sm min-h-9 rounded-lg px-4">সব পণ্য দেখুন <span aria-hidden="true">→</span></a>

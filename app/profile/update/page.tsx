@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
+import { runWithToast } from "@/lib/run-with-toast";
 import UserAvatar from "@/components/UserAvatar";
 
 export default function UpdateProfile() {
@@ -19,26 +19,28 @@ export default function UpdateProfile() {
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setLoading(true);
 
-    try {
-      const { error } = await authClient.updateUser({ name });
-      if (error) {
-        toast.error(error.message || "Update failed.");
-        return;
-      }
+    const succeeded = await runWithToast(
+      setLoading,
+      () => authClient.updateUser({ name }),
+      {
+        error: "Update failed.",
+        connectionError: "Could not update your information.",
+        success: "Information updated successfully.",
+      },
+    );
+    if (!succeeded) return;
 
-      toast.success("Information updated successfully.");
-      router.push("/profile");
-      router.refresh();
-    } catch {
-      toast.error("Could not update your information.");
-    } finally {
-      setLoading(false);
-    }
+    router.push("/profile");
+    router.refresh();
   }
 
-  if (isPending) return <div className="skeleton mx-auto h-64 w-full max-w-[26rem] rounded-2xl" />;
+  if (isPending) return (
+    <div role="status" className="mx-auto w-full max-w-[26rem]">
+      <span className="sr-only">প্রোফাইলের তথ্য লোড হচ্ছে...</span>
+      <div aria-hidden="true" className="skeleton h-64 rounded-2xl" />
+    </div>
+  );
   if (!user) return null;
 
   return (
