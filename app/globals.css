@@ -10,7 +10,12 @@ body { background: #f0f5f1; }
     radial-gradient(ellipse at 88% 12%, rgba(19, 132, 71, .08), transparent 33%),
     linear-gradient(125deg, #f1f7f2 0%, #fbfdfb 62%, #eef5ef 100%);
 }
+
+
+
 .market-kicker { letter-spacing: .04em; }
+
+
 .market-rule { border-color: #dce7de; }
 .price-card { box-shadow: 0 2px 8px rgba(32, 57, 39, .035); }
 .price-card:hover { box-shadow: 0 9px 24px rgba(32, 57, 39, .09); transform: translateY(-2px); }
